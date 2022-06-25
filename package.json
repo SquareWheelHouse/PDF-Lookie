@@ -1,0 +1,29 @@
+{
+  "name": "pdf-lookie",
+  "version": "0.0.1",
+  "description": "navigate and highlight to PDF location",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SquareWheelHouse/PDF-Lookie.git"
+  },
+  "keywords": [
+    "PDF",
+    "navigation",
+    "electron",
+    "productivity"
+  ],
+  "author": "SquareWheelHouse",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SquareWheelHouse/PDF-Lookie/issues"
+  },
+  "homepage": "https://github.com/SquareWheelHouse/PDF-Lookie#readme",
+  "devDependencies": {
+    "electron": "^19.0.6"
+  }
+}
