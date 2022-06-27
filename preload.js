@@ -10,6 +10,13 @@ contextBridge.exposeInMainWorld(
   }
 )
 
+contextBridge.exposeInMainWorld(
+  'electrontest',
+  {
+    protocolHandler: (callback) => ipcRenderer.on('url-protocol', callback)
+  }
+)
+
 window.addEventListener('DOMContentLoaded', () => {
   const replaceText = (selector, text) => {
     const element = document.getElementById(selector)

@@ -1,5 +1,8 @@
 const { app, BrowserWindow, ipcMain, shell, dialog } = require("electron")
 const path = require("path")
+const isDev = require('electron-is-dev')
+
+console.log('💩')
 
 //to manage double opening of app during installation using Squirrel
 if (require('electron-squirrel-startup')) {
@@ -15,15 +18,16 @@ if (isDev && process.platform === 'win32') {
     // Set the path of electron.exe and your app.
     // These two additional parameters are only available on windows.
     // Setting this is required to get this working in dev mode.
-    app.setAsDefaultProtocolClient('pdf-lookie', process.execPath, [
-      resolve(process.argv[1])
-    ]);
+    app.setAsDefaultProtocolClient('pdf-lookie', process.execPath, [path.resolve(process.argv[1])])
+    console.log("I'm in dev mode lol")
   } else if (process.defaultApp) {
     if (process.argv.length >= 2) {
-      app.setAsDefaultProtocolClient('pdf-lookie', process.execPath, [path.resolve(process.argv[1])])
+        app.setAsDefaultProtocolClient('pdf-lookie', process.execPath, [path.resolve(process.argv[1])])
     }
+    console.log("default app")
 } else {
     app.setAsDefaultProtocolClient('pdf-lookie')
+    console.log("normal?")
 }
 
 const gotTheLock = app.requestSingleInstanceLock()
@@ -41,17 +45,21 @@ if (!gotTheLock) {
         if (mainWindow) {
             if (mainWindow.isMinimized()) mainWindow.restore()
             mainWindow.focus()
+            var myUrl = commandLine[3]
+            mainWindow.webContents.send('url-protocol', myUrl)
         }
     })
 
     // Create mainWindow, load the rest of the app, etc...
     app.whenReady().then(() => {
+        ipcMain.on('url-protocol', (_event, value) => {
+            console.log(value) 
+        })
         createWindow();
     })
 
     app.on('open-url', (event, url) => {
         dialog.showErrorBox('Welcome Back', `You arrived from: ${url}`)
-        replaceText('launch-url', `You arrived from: ${url}`)
     })
 }
 
@@ -84,4 +92,8 @@ ipcMain.on('shell:open', () => {
   const pageDirectory = __dirname.replace('app.asar', 'app.asar.unpacked')
   const pagePath = path.join('file://', pageDirectory, 'index.html')
   shell.openExternal(pagePath)
+})
+
+ipcMain.on('url-protocol', (_event, value) => {
+    console.log(value) // will print value to Node console
 })
