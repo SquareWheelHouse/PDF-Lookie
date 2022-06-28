@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell, dialog } = require("electron")
+const { app, BrowserWindow, ipcMain, shell, dialog, session } = require("electron")
 const path = require("path")
 const isDev = require('electron-is-dev')
 
