@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src * ; script-src 'self' https://mozilla.github.io/pdf.js/build/pdf.js https://mozilla.github.io/pdf.js/build/pdf.worker.js ; worker-src blob:">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src * ; script-src 'self'; worker-src blob:">
     <title>Hello World!</title>
     <link rel="stylesheet" type="text/css" href="./style.css">
   </head>
   
   <body>
 
-    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <script src="./lib/pdf.min.js"></script>
+    <script src="./lib/pdf.worker.min.js"></script>
 
     <h1>PDF.js Previous/Next example</h1>
 
