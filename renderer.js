@@ -108,6 +108,23 @@ function onNextPage() {
 }
 document.getElementById('next').addEventListener('click', onNextPage);
 
+const pageNumSelect = document.getElementById('page-num-select')
+
+function goToPage() {
+  const pageSelect = parseInt(pageNumSelect.value)
+  console.log(pageSelect)
+  console.log('thereshould be something here')
+  if (pageSelect > pdfDoc.numPages | pageSelect < 1) {
+    return
+  }
+  pageNum = pageSelect
+  queueRenderPage(pageSelect)
+}
+
+document.getElementById('gotopage').addEventListener('click', goToPage);
+
+
+
 /**
  * Asynchronously downloads PDF.
  */
