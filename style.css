@@ -2,3 +2,18 @@
     border: 1px solid black;
     direction: ltr;
 }
+
+#pdf-view-space {
+    overflow: auto;
+    position: absolute;
+    width: 90%;
+    height: 90%;
+}
+
+#status-line {
+    background: lightgray; 
+    width: 100%; height:20px; 
+    position:fixed;
+    bottom:0px;
+    left:0px
+}

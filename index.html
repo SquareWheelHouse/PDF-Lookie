@@ -3,17 +3,21 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src * ; script-src 'self'; worker-src blob:">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src * ; script-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src-elem 'unsafe-inline' *; worker-src blob: 'self'">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Hello World!</title>
     <link rel="stylesheet" type="text/css" href="./style.css">
+    <link rel="stylesheet" type="text/css" href="./viewer.css">
+    <!-- <script src="./lib/pdf.min.js"></script>
+    <script src="./lib/pdf_viewer.js"></script> 
+    <script src="./lib/pdfAnnotate.js"></script> -->
   </head>
   
   <body>
 
-    <script src="./lib/pdf.min.js"></script>
-    <script src="./lib/pdf.worker.min.js"></script>
 
-    <h1>PDF.js Previous/Next example</h1>
+
+    <h1>PDF Lookie</h1>
 
     <div>
       <button id="prev">Previous</button>
@@ -25,17 +29,11 @@
       <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
     </div>
 
-    <canvas id="the-canvas"></canvas>
-
-    <div hidden="true">
-      <h1>Hello World!</h1>
-      We are using Node.js <span id="node-version"></span>,
-      Chromium <span id="chrome-version"></span>,
-      and Electron <span id="electron-version"></span>.
+    <div>
+        <p>
+                <a href="./lib/web/viewer.html">Click here to see PDF</a>
+        </p>
     </div>
-
-    <h1>Launching Link</h1>
-    URL here <span id="launch-url"></span>
 
     <script src="./renderer.js"></script>
   </body>
