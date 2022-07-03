@@ -2,15 +2,15 @@ const { app, BrowserWindow, ipcMain, shell, dialog, session } = require("electro
 const path = require("path")
 const isDev = require('electron-is-dev')
 
-console.log('💩')
-
 //to manage double opening of app during installation using Squirrel
 if (require('electron-squirrel-startup')) {
     app.quit()
     process.exit(0)
 }
 
-let mainWindow;
+let mainWindow
+
+let pdfFileName
 
 //protocol (external) access
 
@@ -55,12 +55,24 @@ if (!gotTheLock) {
         ipcMain.on('url-protocol', (_event, value) => {
             console.log(value) 
         })
+
+        ipcMain.handle('dialog:openFile', handleFileOpen)
+
         createWindow();
     })
 
     app.on('open-url', (event, url) => {
         dialog.showErrorBox('Welcome Back', `You arrived from: ${url}`)
     })
+}
+
+async function handleFileOpen() {
+    const { canceled, filePaths } = await dialog.showOpenDialog()
+    if (canceled) {
+        return
+    } else {
+        return filePaths[0]
+    }
 }
 
 function createWindow () {

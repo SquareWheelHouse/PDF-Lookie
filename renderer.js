@@ -135,3 +135,21 @@ pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
   // Initial/first page rendering
   renderPage(pageNum);
 });
+
+const btn = document.getElementById('btn')
+const filePathElement = document.getElementById('filePath')
+
+btn.addEventListener('click', async () => {
+  const filePath = await window.electronAPI.openFile()
+  filePathElement.innerText = filePath
+  url = filePath
+  pageNum = 1
+
+  pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+    pdfDoc = pdfDoc_;
+    document.getElementById('page_count').textContent = pdfDoc.numPages;
+  
+    // Initial/first page rendering
+    renderPage(pageNum)
+  });
+})
