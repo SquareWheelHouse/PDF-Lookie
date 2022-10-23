@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src * ; script-src 'self'; worker-src blob:">
-    <title>Hello World!</title>
+    <title>PDF Lookie</title>
     <link rel="stylesheet" type="text/css" href="./style.css">
   </head>
   
@@ -13,32 +13,31 @@
     <script src="./lib/pdf.min.js"></script>
     <script src="./lib/pdf.worker.min.js"></script>
 
-    <h1>PDF.js Previous/Next example</h1>
+    <div style="display: flex;">
 
-    <div>
-      <button id="prev">Previous</button>
-      <button id="next">Next</button>
-      <label for="pnum">Page Number Select:</label>
-      <input id="page-num-select" name="pnum"></input>
-      <button id="gotopage">Go</button>
-      &nbsp; &nbsp;
-      <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-      <button type="button" id="btn">Open a File</button>
-      <span id="filePath"></span>
+      <h1>PDF.js Previous/Next example</h1>
+
+      <div>
+        <button id="prev">Previous</button>
+        <button id="next">Next</button>
+        <label for="pnum">Page Number Select:</label>
+        <input id="page-num-select" name="pnum"></input>
+        <button id="gotopage">Go</button>
+        &nbsp; &nbsp;
+        <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+        <button type="button" id="btn">Open a File</button>
+        <span id="filePath"></span>
+      </div>
+
+      <div>
+        <canvas id="the-canvas" class="flex"></canvas>
+      </div>
+
+      <div>
+        <h1>Launching Link</h1>
+        URL here <span id="launch-url"></span>
+      </div>
     </div>
-
-    <canvas id="the-canvas"></canvas>
-
-    <div hidden="true">
-      <h1>Hello World!</h1>
-      We are using Node.js <span id="node-version"></span>,
-      Chromium <span id="chrome-version"></span>,
-      and Electron <span id="electron-version"></span>.
-    </div>
-
-    <h1>Launching Link</h1>
-    URL here <span id="launch-url"></span>
-
     <script src="./renderer.js"></script>
   </body>
 </html>

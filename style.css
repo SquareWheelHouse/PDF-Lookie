@@ -2,3 +2,7 @@
     border: 1px solid black;
     direction: ltr;
 }
+
+.flexcontainer {
+    flex-direction: column;
+}
