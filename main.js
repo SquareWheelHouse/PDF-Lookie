@@ -53,7 +53,11 @@ if (!gotTheLock) {
     // Create mainWindow, load the rest of the app, etc...
     app.whenReady().then(() => {
         ipcMain.on('url-protocol', (_event, value) => {
-            console.log(value) 
+            const urlSearchString = value.toString().substr(14)
+            const urlParams = new URLSearchParams(urlSearchString);
+            for (const [key, value] of urlParams) {
+                console.log(`${key}:${value}`);
+            }
         })
 
         ipcMain.handle('dialog:openFile', handleFileOpen)

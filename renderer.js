@@ -14,13 +14,23 @@ const urlDisplay = document.getElementById('launch-url')
 
 window.electrontest.protocolHandler((event, value) => {
     urlDisplay.innerText = value
-    event.sender.send('url-protocol', "aok")
+    event.sender.send('url-protocol', value)
+
+    const urlSearchString = value.toString().substr(14)
+    const urlParams = new URLSearchParams(urlSearchString);
+    for (const [key, value] of urlParams) {
+        console.log(`${key}:${value}`);
+    }
+
+    if ( urlParams.has('page') ) {
+      queueRenderPage(parseInt(urlParams.get('page')));
+    }
 })
 
 
 // If absolute URL from the remote server is provided, configure the CORS
 // header on that server.
-var url = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf';
+var url = '';
 
 // Loaded via <script> tag, create shortcut to access PDF.js exports.
 var pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -44,18 +54,23 @@ function renderPage(num) {
   pageRendering = true;
   // Using promise to fetch the page
   pdfDoc.getPage(num).then(function(page) {
+    canvas.width = document.body.clientWidth - document.body.clientLeft; //TODO, elminate overflow w/o constant
+    scale = (canvas.width / page.view[2]);
     var viewport = page.getViewport({
       scale: scale
     });
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
-
+    canvas.height = page.view[3] * scale;
+    
     // Render PDF page into canvas context
     var renderContext = {
       canvasContext: ctx,
       viewport: viewport
     };
     var renderTask = page.render(renderContext);
+
+    let dimensions = page.getViewport(1).viewBox.map(n => n / 72 * 300)
+
+    console.log(dimensions)
 
     // Wait for rendering to finish
     renderTask.promise.then(function() {
