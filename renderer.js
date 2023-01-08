@@ -9,7 +9,6 @@ document.getElementById('open-in-browser').addEventListener('click', () => {
 });
 */
 
-
 const urlDisplay = document.getElementById('launch-url')
 
 window.electrontest.protocolHandler((event, value) => {
@@ -42,24 +41,38 @@ var pdfDoc = null,
   pageNum = 1,
   pageRendering = false,
   pageNumPending = null,
-  scale = 0.8,
+  scale = 1,
   canvas = document.getElementById('the-canvas'),
   ctx = canvas.getContext('2d');
+
+  var container = document.getElementById("canvas-container")
+  var zoomTimeoutHandler = null;
+  var wheelTimeout = 250 //ms
 
 /**
  * Get page info from document, resize canvas accordingly, and render page.
  * @param num Page number.
  */
-function renderPage(num) {
+
+function renderPage(num = -1) {
   pageRendering = true;
   // Using promise to fetch the page
+  if (num === -1) {
+    num = pageNum
+  }
+
   pdfDoc.getPage(num).then(function(page) {
-    canvas.width = document.body.clientWidth - document.body.clientLeft; //TODO, elminate overflow w/o constant
-    scale = (canvas.width / page.view[2]);
+    canvas.width = page.view[2]*scale;
+    canvas.height = page.view[3]*scale;
+    
+    canvasNew = document.getElementById('the-canvas');
+    console.log("scale transform " + panzoom.getTransform().scale);
+
+    //scale = ((canvasNew.width * panzoom.getTransform().scale) / page.view[2]);
     var viewport = page.getViewport({
       scale: scale
     });
-    canvas.height = page.view[3] * scale;
+    
     
     // Render PDF page into canvas context
     var renderContext = {
@@ -70,7 +83,7 @@ function renderPage(num) {
 
     let dimensions = page.getViewport(1).viewBox.map(n => n / 72 * 300)
 
-    console.log(dimensions)
+    console.log("dimensions " + dimensions)
 
     // Wait for rendering to finish
     renderTask.promise.then(function() {
@@ -79,6 +92,8 @@ function renderPage(num) {
         // New page rendering is pending
         renderPage(pageNumPending);
         pageNumPending = null;
+        //container.height = page.view[3] * scale;
+        //container.width = document.body.clientWidth - document.body.clientLeft;
       }
     });
   });
@@ -97,6 +112,7 @@ function queueRenderPage(num) {
   } else {
     renderPage(num);
   }
+  panzoom.moveTo(0, 0);
 }
 
 /**
@@ -123,6 +139,26 @@ function onNextPage() {
 }
 document.getElementById('next').addEventListener('click', onNextPage);
 
+function onGoToCoord() {
+  x = document.getElementById('xcoord').value
+  y = document.getElementById('ycoord').value
+  panzoom.smoothMoveTo(x, y);
+}
+document.getElementById('go-to-coord').addEventListener('click', onGoToCoord);
+
+function onGoToZoom() {
+  z = document.getElementById('zoom').value
+  console.log(z)
+  let canvasobj = document.getElementById('the-canvas')
+
+  let cx = canvasobj.clientLeft + canvasobj.clientHeight/2;
+  let cy = canvasobj.clientTop + canvasobj.clientHeight/2;
+
+  scale = z;
+  renderPage();
+}
+document.getElementById('go-to-zoom').addEventListener('click', onGoToZoom);
+
 const pageNumSelect = document.getElementById('page-num-select')
 
 function goToPage() {
@@ -147,6 +183,8 @@ pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
   pdfDoc = pdfDoc_;
   document.getElementById('page_count').textContent = pdfDoc.numPages;
 
+  container.width = document.body.clientWidth - document.body.clientLeft;
+
   // Initial/first page rendering
   renderPage(pageNum);
 });
@@ -163,8 +201,43 @@ btn.addEventListener('click', async () => {
   pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
     pdfDoc = pdfDoc_;
     document.getElementById('page_count').textContent = pdfDoc.numPages;
-  
+    
     // Initial/first page rendering
     renderPage(pageNum)
+
   });
+
 })
+
+var panzoom = panzoom(container, {
+  smoothScroll: true,
+  maxZoom: 1,
+  minZoom: 1,
+  initialZoom: scale,
+  bounds: true,
+  boundsPadding: 0.1,
+  zoomDoubleClickSpeed: 1,
+  autocenter: true,
+  onDoubleClick: function(e) {
+    // `e` - is current double click event.
+    scale = scale * 1.20;
+    renderPage();
+    return false; // tells the library to not preventDefault, and not stop propagation
+  }
+})
+//container.parentElement.addEventListener('wheel', zoomWithWheel)
+
+panzoom.on('zoom', function(e) {
+  clearTimeout(zoomTimeoutHandler);
+  zoomTimeoutHandler = setTimeout(function() {
+    //scale = panzoom.getTransform().scale
+    //canvas.style.transform = "scale(" + 1 / scale + ")"
+    //console.log(scale)
+    if (pdfDoc)
+      renderPage();
+  }, wheelTimeout)
+});
+
+panzoom.on('zoomend', function(e) {
+  console.log('ZOOM ZOOM ded', e)
+});

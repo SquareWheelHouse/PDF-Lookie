@@ -3,39 +3,42 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src * ; script-src 'self'; worker-src blob:">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; connect-src * ; script-src 'self'; worker-src blob:">
     <title>PDF Lookie</title>
     <link rel="stylesheet" type="text/css" href="./style.css">
   </head>
   
   <body>
 
+    <script src='./lib/panzoom.js'></script>
     <script src="./lib/pdf.min.js"></script>
     <script src="./lib/pdf.worker.min.js"></script>
 
-    <div style="display: flex;">
-
-      <h1>PDF.js Previous/Next example</h1>
-
-      <div>
+    <div class="myflex">
+      <div class="flexitem hdr">
+        <h1>PDF.js Previous/Next example</h1>
+        <p>URL here <span id="launch-url"></span></p>
+        
         <button id="prev">Previous</button>
         <button id="next">Next</button>
         <label for="pnum">Page Number Select:</label>
         <input id="page-num-select" name="pnum"></input>
         <button id="gotopage">Go</button>
+        <input id="xcoord" name="xcoord"></input>
+        <input id="ycoord" name="ycoord"></input>
+        <button id="go-to-coord">Go to coord</button>
+        <input id="zoom" name="zoom"></input>
+        <button id="go-to-zoom">Zoom</button>
         &nbsp; &nbsp;
         <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
         <button type="button" id="btn">Open a File</button>
         <span id="filePath"></span>
       </div>
 
-      <div>
-        <canvas id="the-canvas" class="flex"></canvas>
-      </div>
-
-      <div>
-        <h1>Launching Link</h1>
-        URL here <span id="launch-url"></span>
+      <div class="flexitem content">
+        <div id="canvas-container">
+          <canvas id="the-canvas"></canvas>
+        </div>
       </div>
     </div>
     <script src="./renderer.js"></script>
